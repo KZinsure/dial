@@ -1,25 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Dial</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <title>Dial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <script>
-  // Get number from URL after /dial/?n=NUMBER
-  const params = new URLSearchParams(window.location.search);
-  const num = params.get("n");
+    // Get number from URL after /dial/?n=NUMBER
+    const params = new URLSearchParams(window.location.search);
+    const num = params.get("n");
 
-  if (num) {
-    // Replace this tab with tel: link (prevents new tabs)
-    window.location.replace("tel:" + num);
-
-    // Optional: after returning from the phone app, reset page so next click reuses same tab
-    setTimeout(() => {
-      window.location.replace(window.location.origin + window.location.pathname);
-    }, 1500);
-  }
+    if (num) {
+        // 1. Initiate the call using window.location.replace()
+        // This is still the best way to execute a redirect within the current tab.
+        window.location.replace("tel:" + num);
+        
+        // 2. Attempt to close the tab shortly after the call action is triggered.
+        // This is the primary action to prevent a buildup of open tabs on the iPhone.
+        // We use a small delay to ensure the OS/browser registers the 'tel:' action first.
+        setTimeout(() => {
+            // Check if the window was opened by script (or is a pop-up)
+            // If the window successfully closes, no tab will be left behind.
+            if (window.opener) {
+                window.close();
+            } else {
+                // As a fallback for tabs that cannot be closed, clear the content
+                // to prevent any residual page elements from interfering.
+                document.body.innerHTML = '<p>Call initiated successfully.</p><p>Please close this tab manually if it remains open.</p>';
+            }
+        }, 1500); 
+    }
 </script>
 <p>Dialing…</p>
 </body>
