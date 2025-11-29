@@ -1,29 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Dialer</title>
-  <script>
-    function dial() {
-      const params = new URLSearchParams(window.location.search);
-      const num = params.get("n");
-
-      if (!num) {
-        document.body.innerText = "No number provided.";
-        return;
-      }
-
-      // Open the dialer
-      window.location.replace("tel:" + num);
-
-      // After user returns from dialer, reload same tab so next click reuses it
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 1500);
-    }
-  </script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body onload="dial()">
-  Calling…
+<body>
+<script>
+  // Extract the phone number from the URL path
+  const number = window.location.pathname.replace("/call/", "").replace("/", "");
+
+  // Replace the current tab with the dialer
+  if (number) {
+    window.location.replace("tel:" + number);
+  } else {
+    document.body.innerHTML = "<h3>No phone number provided.</h3>";
+  }
+</script>
 </body>
 </html>
