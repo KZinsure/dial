@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Dial</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <script>
-  // Extract the phone number from the URL path
-  const number = window.location.pathname.replace("/dial/", "").replace("/", "");
+  // Get number from URL after /dial/?n=NUMBER
+  const params = new URLSearchParams(window.location.search);
+  const num = params.get("n");
 
-  // Replace the current tab with the dialer
-  if (number) {
-    window.location.replace("tel:" + number);
-  } else {
-    document.body.innerHTML = "<h3>No phone number provided.</h3>";
+  if (num) {
+    // Replace this tab with tel: link (prevents new tabs)
+    window.location.replace("tel:" + num);
+
+    // Optional: after returning from the phone app, reset page so next click reuses same tab
+    setTimeout(() => {
+      window.location.replace(window.location.origin + window.location.pathname);
+    }, 1500);
   }
 </script>
+<p>Dialing…</p>
 </body>
 </html>
