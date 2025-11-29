@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script>
-      // Get number from URL: ?n=1234567890
+<head>
+  <meta charset="UTF-8" />
+  <title>Dialer</title>
+  <script>
+    function dial() {
       const params = new URLSearchParams(window.location.search);
       const num = params.get("n");
 
-      if (num) {
-        // Replace tab with tel: link
-        window.location.replace("tel:" + num);
-
-        // After going to dialer, return to this page so next call reuses same tab
-        setTimeout(() => {
-          window.location.replace(window.location.origin + window.location.pathname);
-        }, 1000);
+      if (!num) {
+        document.body.innerText = "No number provided.";
+        return;
       }
-    </script>
-  </head>
-  <body>
-    <p style="font-size:18px;">Ready to dial…</p>
-  </body>
+
+      // Open the dialer
+      window.location.replace("tel:" + num);
+
+      // After user returns from dialer, reload same tab so next click reuses it
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    }
+  </script>
+</head>
+<body onload="dial()">
+  Calling…
+</body>
 </html>
